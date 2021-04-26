@@ -1,11 +1,11 @@
-defmodule MoneyClipWeb.Router do
-  use MoneyClipWeb, :router
+defmodule CoinPurseWeb.Router do
+  use CoinPurseWeb, :router
 
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
     plug :fetch_live_flash
-    plug :put_root_layout, {MoneyClipWeb.LayoutView, :root}
+    plug :put_root_layout, {CoinPurseWeb.LayoutView, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
   end
@@ -14,14 +14,14 @@ defmodule MoneyClipWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", MoneyClipWeb do
+  scope "/", CoinPurseWeb do
     pipe_through :browser
 
     live "/", PageLive, :index
   end
 
   # Other scopes may use custom stacks.
-  # scope "/api", MoneyClipWeb do
+  # scope "/api", CoinPurseWeb do
   #   pipe_through :api
   # end
 
@@ -37,7 +37,7 @@ defmodule MoneyClipWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: MoneyClipWeb.Telemetry
+      live_dashboard "/dashboard", metrics: CoinPurseWeb.Telemetry
     end
   end
 end

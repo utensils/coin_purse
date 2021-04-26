@@ -1,5 +1,5 @@
-defmodule MoneyClipWeb.PageLiveTest do
-  use MoneyClipWeb.ConnCase
+defmodule CoinPurseWeb.PageLiveTest do
+  use CoinPurseWeb.ConnCase
 
   import Phoenix.LiveViewTest
 

@@ -7,15 +7,15 @@
 # General application configuration
 use Mix.Config
 
-config :money_clip,
-  ecto_repos: [MoneyClip.Repo]
+config :coin_purse,
+  ecto_repos: [CoinPurse.Repo]
 
 # Configures the endpoint
-config :money_clip, MoneyClipWeb.Endpoint,
+config :coin_purse, CoinPurseWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "MGmQdv8pfS+lL0HQMkZxEpTl3LckgmWfXBz4UMYkT/lNucDBxwjU2x/2yBuKXcqw",
-  render_errors: [view: MoneyClipWeb.ErrorView, accepts: ~w(html json), layout: false],
-  pubsub_server: MoneyClip.PubSub,
+  render_errors: [view: CoinPurseWeb.ErrorView, accepts: ~w(html json), layout: false],
+  pubsub_server: CoinPurse.PubSub,
   live_view: [signing_salt: "0wk4FxXU"]
 
 # Configures Elixir's Logger

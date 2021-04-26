@@ -1,11 +1,11 @@
-defmodule MoneyClipWeb.Gettext do
+defmodule CoinPurseWeb.Gettext do
   @moduledoc """
   A module providing Internationalization with a gettext-based API.
 
   By using [Gettext](https://hexdocs.pm/gettext),
   your module gains a set of macros for translations, for example:
 
-      import MoneyClipWeb.Gettext
+      import CoinPurseWeb.Gettext
 
       # Simple translation
       gettext("Here is the string to translate")
@@ -20,5 +20,5 @@ defmodule MoneyClipWeb.Gettext do
 
   See the [Gettext Docs](https://hexdocs.pm/gettext) for detailed usage.
   """
-  use Gettext, otp_app: :money_clip
+  use Gettext, otp_app: :coin_purse
 end

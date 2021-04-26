@@ -1,4 +1,4 @@
-# MoneyClip
+# CoinPurse
 
 To start your Phoenix server:
 

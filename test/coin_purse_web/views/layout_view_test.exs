@@ -1,5 +1,5 @@
-defmodule MoneyClipWeb.LayoutViewTest do
-  use MoneyClipWeb.ConnCase, async: true
+defmodule CoinPurseWeb.LayoutViewTest do
+  use CoinPurseWeb.ConnCase, async: true
 
   # When testing helpers, you may want to import Phoenix.HTML and
   # use functions such as safe_to_string() to convert the helper

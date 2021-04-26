@@ -1,4 +1,4 @@
-defmodule MoneyClipWeb.Telemetry do
+defmodule CoinPurseWeb.Telemetry do
   use Supervisor
   import Telemetry.Metrics
 
@@ -31,11 +31,11 @@ defmodule MoneyClipWeb.Telemetry do
       ),
 
       # Database Metrics
-      summary("money_clip.repo.query.total_time", unit: {:native, :millisecond}),
-      summary("money_clip.repo.query.decode_time", unit: {:native, :millisecond}),
-      summary("money_clip.repo.query.query_time", unit: {:native, :millisecond}),
-      summary("money_clip.repo.query.queue_time", unit: {:native, :millisecond}),
-      summary("money_clip.repo.query.idle_time", unit: {:native, :millisecond}),
+      summary("coin_purse.repo.query.total_time", unit: {:native, :millisecond}),
+      summary("coin_purse.repo.query.decode_time", unit: {:native, :millisecond}),
+      summary("coin_purse.repo.query.query_time", unit: {:native, :millisecond}),
+      summary("coin_purse.repo.query.queue_time", unit: {:native, :millisecond}),
+      summary("coin_purse.repo.query.idle_time", unit: {:native, :millisecond}),
 
       # VM Metrics
       summary("vm.memory.total", unit: {:byte, :kilobyte}),
@@ -49,7 +49,7 @@ defmodule MoneyClipWeb.Telemetry do
     [
       # A module, function and arguments to be invoked periodically.
       # This function must call :telemetry.execute/3 and a metric must be added above.
-      # {MoneyClipWeb, :count_users, []}
+      # {CoinPurseWeb, :count_users, []}
     ]
   end
 end

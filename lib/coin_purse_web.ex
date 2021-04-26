@@ -1,12 +1,12 @@
-defmodule MoneyClipWeb do
+defmodule CoinPurseWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
   as controllers, views, channels and so on.
 
   This can be used in your application as:
 
-      use MoneyClipWeb, :controller
-      use MoneyClipWeb, :view
+      use CoinPurseWeb, :controller
+      use CoinPurseWeb, :view
 
   The definitions below will be executed for every view,
   controller, etc, so keep them short and clean, focused
@@ -19,19 +19,19 @@ defmodule MoneyClipWeb do
 
   def controller do
     quote do
-      use Phoenix.Controller, namespace: MoneyClipWeb
+      use Phoenix.Controller, namespace: CoinPurseWeb
 
       import Plug.Conn
-      import MoneyClipWeb.Gettext
-      alias MoneyClipWeb.Router.Helpers, as: Routes
+      import CoinPurseWeb.Gettext
+      alias CoinPurseWeb.Router.Helpers, as: Routes
     end
   end
 
   def view do
     quote do
       use Phoenix.View,
-        root: "lib/money_clip_web/templates",
-        namespace: MoneyClipWeb
+        root: "lib/coin_purse_web/templates",
+        namespace: CoinPurseWeb
 
       # Import convenience functions from controllers
       import Phoenix.Controller,
@@ -45,7 +45,7 @@ defmodule MoneyClipWeb do
   def live_view do
     quote do
       use Phoenix.LiveView,
-        layout: {MoneyClipWeb.LayoutView, "live.html"}
+        layout: {CoinPurseWeb.LayoutView, "live.html"}
 
       unquote(view_helpers())
     end
@@ -72,7 +72,7 @@ defmodule MoneyClipWeb do
   def channel do
     quote do
       use Phoenix.Channel
-      import MoneyClipWeb.Gettext
+      import CoinPurseWeb.Gettext
     end
   end
 
@@ -87,9 +87,9 @@ defmodule MoneyClipWeb do
       # Import basic rendering functionality (render, render_layout, etc)
       import Phoenix.View
 
-      import MoneyClipWeb.ErrorHelpers
-      import MoneyClipWeb.Gettext
-      alias MoneyClipWeb.Router.Helpers, as: Routes
+      import CoinPurseWeb.ErrorHelpers
+      import CoinPurseWeb.Gettext
+      alias CoinPurseWeb.Router.Helpers, as: Routes
     end
   end
 

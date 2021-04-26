@@ -1,5 +1,5 @@
-defmodule MoneyClipWeb.PageLive do
-  use MoneyClipWeb, :live_view
+defmodule CoinPurseWeb.PageLive do
+  use CoinPurseWeb, :live_view
 
   @impl true
   def mount(_params, _session, socket) do
@@ -26,7 +26,7 @@ defmodule MoneyClipWeb.PageLive do
   end
 
   defp search(query) do
-    if not MoneyClipWeb.Endpoint.config(:code_reloader) do
+    if not CoinPurseWeb.Endpoint.config(:code_reloader) do
       raise "action disabled when not in development"
     end
 

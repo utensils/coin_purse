@@ -1,6 +1,6 @@
-defmodule MoneyClip do
+defmodule CoinPurse do
   @moduledoc """
-  MoneyClip keeps the contexts that define your domain
+  CoinPurse keeps the contexts that define your domain
   and business logic.
 
   Contexts are also responsible for managing your data, regardless

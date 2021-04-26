@@ -1,5 +1,5 @@
-defmodule MoneyClipWeb.ErrorView do
-  use MoneyClipWeb, :view
+defmodule CoinPurseWeb.ErrorView do
+  use CoinPurseWeb, :view
 
   # If you want to customize a particular status code
   # for a certain format, you may uncomment below.

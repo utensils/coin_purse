@@ -1,16 +1,16 @@
-defmodule MoneyClipWeb.Endpoint do
-  use Phoenix.Endpoint, otp_app: :money_clip
+defmodule CoinPurseWeb.Endpoint do
+  use Phoenix.Endpoint, otp_app: :coin_purse
 
   # The session will be stored in the cookie and signed,
   # this means its contents can be read but not tampered with.
   # Set :encryption_salt if you would also like to encrypt it.
   @session_options [
     store: :cookie,
-    key: "_money_clip_key",
+    key: "_coin_purse_key",
     signing_salt: "g8cLc3jo"
   ]
 
-  socket "/socket", MoneyClipWeb.UserSocket,
+  socket "/socket", CoinPurseWeb.UserSocket,
     websocket: true,
     longpoll: false
 
@@ -22,7 +22,7 @@ defmodule MoneyClipWeb.Endpoint do
   # when deploying your static files in production.
   plug Plug.Static,
     at: "/",
-    from: :money_clip,
+    from: :coin_purse,
     gzip: false,
     only: ~w(css fonts images js favicon.ico robots.txt)
 
@@ -32,7 +32,7 @@ defmodule MoneyClipWeb.Endpoint do
     socket "/phoenix/live_reload/socket", Phoenix.LiveReloader.Socket
     plug Phoenix.LiveReloader
     plug Phoenix.CodeReloader
-    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :money_clip
+    plug Phoenix.Ecto.CheckRepoStatus, otp_app: :coin_purse
   end
 
   plug Phoenix.LiveDashboard.RequestLogger,
@@ -50,5 +50,5 @@ defmodule MoneyClipWeb.Endpoint do
   plug Plug.MethodOverride
   plug Plug.Head
   plug Plug.Session, @session_options
-  plug MoneyClipWeb.Router
+  plug CoinPurseWeb.Router
 end
