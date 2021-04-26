@@ -19,4 +19,11 @@ config :coin_purse, CoinPurseWeb.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :info
+
+config :coin_purse,
+  ws_module: CoinPurse.MockWebSocket,
+  ftx: [
+    keep_alive: 10,
+    markets: ["BTC/USD"]
+  ]
