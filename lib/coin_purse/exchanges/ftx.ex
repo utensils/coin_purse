@@ -1,4 +1,4 @@
-defmodule CoinPurse.Ftx do
+defmodule CoinPurse.Exchanges.Ftx do
   @moduledoc """
   Leverage the ftx.us websocket connection for real-time market data
   """
@@ -17,6 +17,7 @@ defmodule CoinPurse.Ftx do
     {:ok, state, {:continue, :subscribe}}
   end
 
+  @impl true
   def handle_info(:ping, state) do
     state
     |> Keyword.get(:client)

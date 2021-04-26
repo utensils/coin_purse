@@ -27,14 +27,4 @@ defmodule CoinPurseWeb.ChannelCase do
       @endpoint CoinPurseWeb.Endpoint
     end
   end
-
-  setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(CoinPurse.Repo)
-
-    unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(CoinPurse.Repo, {:shared, self()})
-    end
-
-    :ok
-  end
 end

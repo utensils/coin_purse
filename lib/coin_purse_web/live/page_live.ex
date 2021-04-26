@@ -1,4 +1,5 @@
 defmodule CoinPurseWeb.PageLive do
+  @moduledoc false
   use CoinPurseWeb, :live_view
 
   @impl true

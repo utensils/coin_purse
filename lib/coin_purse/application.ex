@@ -7,8 +7,6 @@ defmodule CoinPurse.Application do
 
   def start(_type, _args) do
     children = [
-      # Start the Ecto repository
-      #      CoinPurse.Repo,
       # Start the Telemetry supervisor
       CoinPurseWeb.Telemetry,
       # Start the PubSub system
