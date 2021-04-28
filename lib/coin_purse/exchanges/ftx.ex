@@ -2,56 +2,48 @@ defmodule CoinPurse.Exchanges.Ftx do
   @moduledoc """
   Leverage the ftx.us websocket connection for real-time market data
   """
-  use WebSockex
+  use GenServer
 
   require Logger
 
   alias CoinPurseWeb.Endpoint
 
-  @endpoint "wss://ftx.us/ws"
-
   def start_link(markets) do
-    {:ok, pid} = WebSockex.start_link(@endpoint, __MODULE__, :ignored)
-    GenServer.start_link(__MODULE__, client: pid, markets: markets)
+    GenServer.start_link(__MODULE__, %{markets: markets})
   end
 
-  def init(state) do
-    {:ok, state, {:continue, :subscribe}}
+  def init(initial_state) do
+    {:ok, initial_state, {:continue, :establish_connection}}
   end
 
-  @impl true
+  def handle_info({:gun_upgrade, _conn_pid, _stream_ref, ["websocket"], _headers}, state) do
+    ping(state)
+    ticker_subscriptions(state)
+    {:noreply, state}
+  end
+
   def handle_info(:ping, state) do
-    state
-    |> Keyword.get(:client)
-    |> ping()
-
+    ping(state)
     {:noreply, state}
   end
 
-  def handle_continue(:subscribe, state) do
-    client = Keyword.get(state, :client)
-    markets = Keyword.get(state, :markets)
-
-    ping(client)
-
-    Enum.each(
-      markets,
-      &WebSockex.send_frame(
-        client,
-        {:text, Jason.encode!(%{op: "subscribe", channel: "ticker", market: "#{&1}/USD"})}
-      )
-    )
-
-    {:noreply, state}
-  end
-
-  @impl true
-  def handle_frame({_type, msg}, state) do
-    msg
+  def handle_info({:gun_ws, _conn_pid, _stream_ref, {:text, frame}}, state) do
+    frame
     |> Jason.decode!()
     |> handle_message()
 
-    {:ok, state}
+    {:noreply, state}
+  end
+
+  def handle_info(_message, state) do
+    {:noreply, state}
+  end
+
+  def handle_continue(:establish_connection, state) do
+    {:ok, conn_pid} = :gun.open('ftx.us', 443, %{protocols: [:http]})
+    stream_ref = :gun.ws_upgrade(conn_pid, '/ws')
+
+    {:noreply, Map.merge(state, %{conn_pid: conn_pid, stream_ref: stream_ref})}
   end
 
   defp handle_message(%{"channel" => "ticker", "type" => "update"} = message) do
@@ -72,8 +64,18 @@ defmodule CoinPurse.Exchanges.Ftx do
     :ignored
   end
 
-  defp ping(client) do
-    WebSockex.send_frame(client, {:text, Jason.encode!(%{op: "ping"})})
+  defp ping(%{conn_pid: conn_pid, stream_ref: stream_ref}) do
+    :gun.ws_send(conn_pid, stream_ref, {:text, '{"op": "ping"}'})
     Process.send_after(self(), :ping, 15_000)
+  end
+
+  defp ticker_subscriptions(%{conn_pid: conn_pid, markets: markets, stream_ref: stream_ref}) do
+    frames =
+      Enum.map(markets, fn market ->
+        json = Jason.encode!(%{op: "subscribe", channel: "ticker", market: "#{market}/USD"})
+        {:text, String.to_charlist(json)}
+      end)
+
+    :gun.ws_send(conn_pid, stream_ref, frames)
   end
 end
