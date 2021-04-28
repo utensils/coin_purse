@@ -6,11 +6,13 @@ defmodule CoinPurse.Exchanges.Ftx do
 
   require Logger
 
+  alias CoinPurseWeb.Endpoint
+
   @endpoint "wss://ftx.us/ws"
 
-  def start_link(market) do
+  def start_link(markets) do
     {:ok, pid} = WebSockex.start_link(@endpoint, __MODULE__, :ignored)
-    GenServer.start_link(__MODULE__, client: pid, market: market)
+    GenServer.start_link(__MODULE__, client: pid, markets: markets)
   end
 
   def init(state) do
@@ -28,13 +30,16 @@ defmodule CoinPurse.Exchanges.Ftx do
 
   def handle_continue(:subscribe, state) do
     client = Keyword.get(state, :client)
-    market = Keyword.get(state, :market)
+    markets = Keyword.get(state, :markets)
 
     ping(client)
 
-    WebSockex.send_frame(
-      client,
-      {:text, Jason.encode!(%{op: "subscribe", channel: "ticker", market: market})}
+    Enum.each(
+      markets,
+      &WebSockex.send_frame(
+        client,
+        {:text, Jason.encode!(%{op: "subscribe", channel: "ticker", market: "#{&1}/USD"})}
+      )
     )
 
     {:noreply, state}
@@ -50,15 +55,20 @@ defmodule CoinPurse.Exchanges.Ftx do
   end
 
   defp handle_message(%{"channel" => "ticker", "type" => "update"} = message) do
-    amount = get_in(message, ["data", "last"])
-    market = Map.get(message, "market")
-    Logger.info("#{market} #{amount}")
-    # emit market update
+    bid = get_in(message, ["data", "bid"])
+    last = get_in(message, ["data", "last"])
+
+    [market, _currency] =
+      message
+      |> Map.get("market")
+      |> String.split("/")
+
+    Endpoint.broadcast!("markets:#{market}", "ticker_update", {market, last, bid})
 
     :ok
   end
 
-  defp handle_message(_) do
+  defp handle_message(_msg) do
     :ignored
   end
 

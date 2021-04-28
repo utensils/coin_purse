@@ -17,7 +17,7 @@ defmodule CoinPurseWeb.PageLive do
 
   @impl true
   def handle_info(%{event: "ticker_update", payload: {market, last, bid}}, socket) do
-    markets = 
+    markets =
       socket.assigns
       |> Map.get(:markets, %{})
       |> Map.put(market, {last, bid})
