@@ -12,9 +12,9 @@ defmodule CoinPurse.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: CoinPurse.PubSub},
       # Start the Endpoint (http/https)
-      CoinPurseWeb.Endpoint
+      CoinPurseWeb.Endpoint,
       # Start a worker by calling: CoinPurse.Worker.start_link(arg)
-      # {CoinPurse.Worker, arg}
+      {CoinPurse.Exchanges.Ftx, markets()}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
@@ -28,5 +28,12 @@ defmodule CoinPurse.Application do
   def config_change(changed, _new, removed) do
     CoinPurseWeb.Endpoint.config_change(changed, removed)
     :ok
+  end
+
+  defp markets do
+    :coin_purse
+    |> Application.get_env(:exchanges)
+    |> Keyword.get(:ftx)
+    |> Keyword.fetch!(:markets)
   end
 end
