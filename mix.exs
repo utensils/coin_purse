@@ -35,6 +35,8 @@ defmodule CoinPurse.MixProject do
     [
       {:ecto_sql, "~> 3.4"},
       {:gettext, "~> 0.11"},
+      {:cowlib, "~> 2.10", override: true},
+      {:gun, "~> 2.0.0-rc.1"},
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.0"},
       {:phoenix, "~> 1.5.3"},
