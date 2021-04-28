@@ -34,7 +34,6 @@ defmodule CoinPurse.MixProject do
   defp deps do
     [
       {:ecto_sql, "~> 3.4"},
-      {:floki, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:httpoison, "~> 1.8"},
       {:jason, "~> 1.0"},
@@ -51,6 +50,8 @@ defmodule CoinPurse.MixProject do
 
       # Dev and Test deps
       {:credo, ">= 0.0.0", only: :dev},
+      {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false},
+      {:floki, ">= 0.0.0", only: :test},
       {:phoenix_live_reload, "~> 1.2", only: :dev}
     ]
   end
