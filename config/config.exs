@@ -27,7 +27,11 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :coin_purse,
-  exchanges: [ftx: ["BTC/USD, ETH/USD, SOL/USD"]]
+  exchanges: [
+    ftx: [
+      markets: ["BTC", "DOGE", "ETH", "SOL"]
+    ]
+  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
