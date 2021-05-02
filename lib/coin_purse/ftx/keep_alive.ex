@@ -8,13 +8,18 @@ defmodule CoinPurse.Ftx.KeepAlive do
 
   def start_link(opts) do
     ws_client = Keyword.fetch!(opts, :ws_client)
-    GenServer.start_link(__MODULE__, ws_client, opts)
+    GenServer.start_link(__MODULE__, ws_client, name: __MODULE__)
   end
 
   @impl true
   def init(ws_client) do
-    ping(ws_client)
     {:ok, ws_client}
+  end
+
+  @impl true
+  def handle_cast(:handle_connection, ws_client) do
+    ping(ws_client)
+    {:noreply, ws_client}
   end
 
   @impl true
@@ -25,8 +30,8 @@ defmodule CoinPurse.Ftx.KeepAlive do
 
   defp keep_alive do
     :coin_purse
-    |> Application.get_env(:ftx)
-    |> Keyword.get(:keep_alive, 15_000)
+    |> Application.get_env(:exchanges)
+    |> get_in([:ftx, :keep_alive])
   end
 
   defp ping(ws_client) do

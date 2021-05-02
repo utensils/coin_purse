@@ -14,7 +14,7 @@ defmodule CoinPurse.Ftx.KeepAliveTest do
     setup :verify_on_exit!
 
     test "sends a ping and schedules the next ping" do
-      expect(MockWebSocket, :send_json, 3, fn _ws_client, %{op: "ping"} ->
+      expect(MockWebSocket, :send_frame, 3, fn _ws_client, ~s({"op": "ping"}) ->
         Logger.info("pong")
       end)
 

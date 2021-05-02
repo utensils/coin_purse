@@ -7,9 +7,10 @@ defmodule CoinPurse.Ftx.Worker do
 
   require Logger
 
+  alias CoinPurse.Ftx.Ticker
+
   def start_link(opts) do
-    name = Keyword.fetch!(opts, :name)
-    GenServer.start_link(__MODULE__, opts, name: name)
+    GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
   @impl true
@@ -17,22 +18,39 @@ defmodule CoinPurse.Ftx.Worker do
     markets = Keyword.fetch!(opts, :markets)
     ws_client = Keyword.fetch!(opts, :ws_client)
 
-    Enum.each(markets, &subscribe(ws_client, &1))
-
     {:ok, {ws_client, markets}}
   end
 
   @impl true
-  def handle_cast({:handle_message, message}, state) do
-    handle_message(message)
+  def handle_cast(:handle_connection, {ws_client, markets}) do
+    Enum.each(markets, &subscribe(ws_client, &1))
+    {:noreply, {ws_client, markets}}
+  end
+
+  @impl true
+  def handle_cast({:handle_frame, frame}, state) do
+    frame
+    |> Jason.decode!()
+    |> handle_message()
+
     {:noreply, state}
   end
 
   defp handle_message(%{"channel" => "ticker", "type" => "update"} = message) do
-    amount = get_in(message, ["data", "last"])
-    market = Map.get(message, "market")
-    Logger.info("#{market} #{amount}")
-    # emit market update
+    %{"data" => %{"ask" => ask, "bid" => bid, "last" => last, "time" => time}, "market" => market} =
+      message
+
+    [market, _currency] =
+      message
+      |> Map.get("market")
+      |> String.split("/")
+
+    Logger.info("FTX.us #{market} #{last} @ #{time}")
+
+    ticker = struct(Ticker, market: market, ask: ask, bid: bid, last: last, timestamp: time)
+
+    CoinPurseWeb.Endpoint.broadcast!("markets:#{market}", "ticker_update", ticker)
+    # |> FtxBuffer.insert()
 
     :ok
   end
@@ -43,7 +61,12 @@ defmodule CoinPurse.Ftx.Worker do
 
   defp subscribe(ws_client, market) do
     Logger.info("Subscribed to #{market}")
-    websocket().send_json(ws_client, %{op: "subscribe", channel: "ticker", market: market})
+
+    websocket().send_json(ws_client, %{
+      op: "subscribe",
+      channel: "ticker",
+      market: "#{market}/USD"
+    })
   end
 
   defp websocket do

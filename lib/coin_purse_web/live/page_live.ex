@@ -10,17 +10,17 @@ defmodule CoinPurseWeb.PageLive do
 
     Enum.each(markets, &Endpoint.subscribe("markets:#{&1}"))
 
-    market_amounts = Enum.into(markets, %{}, &{&1, 0})
+    market_amounts = Enum.into(markets, %{}, &{&1, nil})
 
     {:ok, assign(socket, :markets, market_amounts)}
   end
 
   @impl true
-  def handle_info(%{event: "ticker_update", payload: {market, last, bid}}, socket) do
+  def handle_info(%{event: "ticker_update", payload: ticker}, socket) do
     markets =
       socket.assigns
       |> Map.get(:markets, %{})
-      |> Map.put(market, {last, bid})
+      |> Map.put(ticker.market, ticker)
 
     {:noreply, assign(socket, :markets, markets)}
   end
