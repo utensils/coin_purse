@@ -27,8 +27,11 @@ config :logger, :console,
 config :phoenix, :json_library, Jason
 
 config :coin_purse,
+  ws_module: CoinPurse.WebSocket,
   exchanges: [
     ftx: [
+      endpoint: "wss://ftx.us/ws",
+      keep_alive: 15_000,
       markets: ["BTC", "DOGE", "ETH", "SOL"]
     ]
   ]

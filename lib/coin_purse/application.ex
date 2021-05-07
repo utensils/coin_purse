@@ -14,7 +14,7 @@ defmodule CoinPurse.Application do
       # Start the Endpoint (http/https)
       CoinPurseWeb.Endpoint,
       # Start a worker by calling: CoinPurse.Worker.start_link(arg)
-      {CoinPurse.Exchanges.Ftx, markets()}
+      {CoinPurse.Ftx.Supervisor, markets()}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -1,2 +1,2 @@
 ExUnit.start()
-# Ecto.Adapters.SQL.Sandbox.mode(CoinPurse.Repo, :manual)
+Mox.defmock(CoinPurse.MockWebSocket, for: CoinPurse.WebSocket)
